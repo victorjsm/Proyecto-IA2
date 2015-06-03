@@ -30,15 +30,19 @@
 #include "othello_cut.h" 
 #include <iostream>
 #include <limits>
+#include <ctime>
+#include <iostream>
 
 using namespace std;
 
 int negamaxAB(state_t state, int depth, int A, int B, int color);
+int negamax(state_t state, int depth, int color);
 
 int main(int argc, const char **argv) {
+    std::clock_t begin, end;
     state_t state;
     cout << "Principal variation:" << endl;
-    int j, x=2;
+    int j, x=4;
     for( int i = 0; PV[i] != -1; ++i ) {
         j=i;
         bool player = i % 2 == 0; // black moves first!
@@ -48,15 +52,47 @@ int main(int argc, const char **argv) {
             break;
         state = state.move(player, pos);
     }
-    
+     
     cout << state;
-    cout << "\nCall to negamax\n";
-    int score = negamaxAB(state,31,std::numeric_limits<int>::min(),std::numeric_limits<int>::max(),1);
 
-    cout << score;
-    cout << "\n";
+    cout << "\nCall to negamax\n";
+
+    begin= std::clock();
+    int score = negamax(state,31,1);
+    end =std::clock();
+    cout << "time: " << (end - begin) / (double)(CLOCKS_PER_SEC / 1000) << "ms \n";
+    cout << "h:" << score << "\n";
+
+    cout << "\nCall to negamaxAB\n";
+    begin= std::clock();
+    score = negamaxAB(state,31,std::numeric_limits<int>::min(),std::numeric_limits<int>::max(),1);
+    end =std::clock();
+    cout << "time: " << (end - begin) / (double)(CLOCKS_PER_SEC / 1000) << "ms \n";
+    cout << "h:" << score << "\n";
 
     return 0;
+}
+
+
+int negamax(state_t state, int depth, int color){
+    cout << "depth: "<< depth << "\n";
+    cout << state << "\n";
+    if (depth==0 || state.terminal() ){
+        cout << "Done \n";
+        return color*state.value();//check for implementation in othelo_cut
+    } 
+    int score=std::numeric_limits<int>::min();
+    int val;
+    bool player=color<0;
+    std::vector<int> v= state.get_valid_moves(player);
+    for(std::vector<int>::iterator it = v.begin(); it != v.end(); ++it) {
+        cout << "it:" << *it << "\n\n";
+        val=negamax(state.move(player,*it),depth-1,-color);
+        cout << "val:" << val << "\n";
+        score= max(score,-val);
+    }
+    cout << "Going back \n";
+    return score;
 }
 
 int negamaxAB(state_t state, int depth, int A, int B, int color){
