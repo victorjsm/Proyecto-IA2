@@ -10,7 +10,9 @@ int Nodos=0;
 int Hojas=0;
 
 int negamax(state_t state, int depth, int color){
+    Nodos = Nodos+1;
     if (depth==0 || state.terminal() ){
+        Hojas = Hojas+1;
         return state.value();//check for implementation in othelo_cut
     } 
     int score=- std::numeric_limits<int>::max();
@@ -18,18 +20,20 @@ int negamax(state_t state, int depth, int color){
     bool player=color>0;
     std::vector<int> v= state.get_valid_moves(player);
     if (v.size() == 0) {
-        return -std::numeric_limits<int>::max();
+        val=-negamax(state,depth-1,-color);
+        score = max(score,val);
     }
     for(std::vector<int>::iterator it = v.begin(); it != v.end(); ++it) {
         val=-negamax(state.move(player,*it),depth-1,-color);
-        score= max(score,-val);
+        score= max(score,val);
     }
     return score;
 }
+
 int negamaxAB(state_t state, int depth, int A, int B, int color){
     Nodos= Nodos+1;
     if (depth==0 || state.terminal() ){
-
+        Hojas = Hojas+1;
         return color*state.value();//check for implementation in othelo_cut
     } 
     int score=std::numeric_limits<int>::min();
@@ -37,21 +41,18 @@ int negamaxAB(state_t state, int depth, int A, int B, int color){
     bool player=color>0;
     std::vector<int> v= state.get_valid_moves(player);
     if (v.size()==0){
-        Hojas = Hojas+1;
+        val = negamaxAB(state,depth-1,A,B,-color);
+        score = max(score,-val);
     }
     for(std::vector<int>::iterator it = v.begin(); it != v.end(); ++it) {
-
         val=negamaxAB(state.move(player,*it),depth-1,-B,-A,-color);
         score= max(score,-val);
         A= max(A,-val);
         if (A>=B)
             break;
     }
-    cout << "AQUI\n";
     return score;
 }
-
-
 
 
 bool TestMayor(state_t state, int depth, int value, int color){
@@ -62,11 +63,11 @@ bool TestMayor(state_t state, int depth, int value, int color){
     bool player=color>0;
     std::vector<int> v= state.get_valid_moves(player);
     for(std::vector<int>::iterator it = v.begin(); it != v.end(); ++it) {
-        if ((color>0) && !TestMayor(state.move(player,*it),depth-1,value,-color)) {
-            return false;
+        if ((color>0) && TestMayor(state.move(player,*it),depth-1,value,-color)) {
+            return true;
         }
     }
-    return color<0;
+    return false;
 }
 bool TestMinor(state_t state, int depth, int value, int color){
     if (depth==0 || state.terminal() ){
@@ -76,7 +77,7 @@ bool TestMinor(state_t state, int depth, int value, int color){
     bool player=color>0;
     std::vector<int> v= state.get_valid_moves(player);
     for(std::vector<int>::iterator it = v.begin(); it != v.end(); ++it) {
-        if ((color>0) && !TestMinor(state.move(player,*it),depth-1,value,-color)) {
+        if ((color<0) && !TestMinor(state.move(player,*it),depth-1,value,-color)) {
             return false;
         }
     }
@@ -84,7 +85,9 @@ bool TestMinor(state_t state, int depth, int value, int color){
 }
 
 int Scout(state_t state, int depth, int color){
+    Nodos = Nodos+1;
     if (depth==0 || state.terminal() ){
+        Hojas = Hojas+1;
         return state.value();//check for implementation in othelo_cut
     } 
     int score=0;
@@ -92,7 +95,7 @@ int Scout(state_t state, int depth, int color){
     int first =0;
     std::vector<int> v= state.get_valid_moves(player);
     if (v.size() == 0) {
-        return -std::numeric_limits<int>::max();
+        return Scout(state,depth-1,-color);
     }
 
     for(std::vector<int>::iterator it = v.begin(); it != v.end(); ++it) {
@@ -114,7 +117,9 @@ int Scout(state_t state, int depth, int color){
 
 
 int negaScout(state_t state, int depth, int A, int B, int color){
+    Nodos = Nodos+1;
     if (depth==0 || state.terminal() ){
+        Hojas = Hojas+1;
         return color*state.value();//check for implementation in othelo_cut
     } 
     int score=0;
@@ -123,7 +128,7 @@ int negaScout(state_t state, int depth, int A, int B, int color){
 
     std::vector<int> v= state.get_valid_moves(player);
     if (v.size() == 0) {
-        return std::numeric_limits<int>::max();
+        return negaScout(state,depth-1,A,B,-color);
     }
 
     for(std::vector<int>::iterator it = v.begin(); it != v.end(); ++it) {
