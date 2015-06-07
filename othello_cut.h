@@ -22,6 +22,9 @@
 #include <iostream>
 #include <vector>
 #include <stdlib.h>
+#include <limits>
+#include <ctime>
+
 
 #define MAX(s,t)      ((s)>(t)?(s):(t))
 #define MIN(s,t)      ((s)<(t)?(s):(t))
@@ -215,10 +218,12 @@ inline bool state_t::outflank(bool color, int pos) const {
     x = dia1[pos - 4];
     while (*x != pos) ++x;
     if ( *(x+1) != -1) {
+
         for ( p = x + 1; (*p != -1) && !is_free(*p) && (color ^ is_black(*p)); ++p);
         if ((p > x + 1) && (*p != -1) && !is_free(*p) ) return true;
     }
     if (x != dia1[pos - 4]) {
+
         for ( p = x-1; (p >= dia1[pos-4]) && !is_free(*p) && (color ^ is_black(*p)); --p);
         if ((p < x-1) && (p >= dia1[pos-4]) && !is_free(*p)) return true;
     }
@@ -226,10 +231,12 @@ inline bool state_t::outflank(bool color, int pos) const {
     x = dia2[pos - 4];
     while (*x != pos) ++x;
     if ( *(x+1) != -1) {
+
         for ( p = x + 1; (*p != -1) && !is_free(*p) && (color ^ is_black(*p)); ++p);
         if ((p > x + 1) && (*p != -1) && !is_free(*p) ) return true;
     }
     if (x != dia2[pos - 4]) {
+
         for ( p = x-1; (p >= dia2[pos-4]) && !is_free(*p) && (color ^ is_black(*p)); --p);
         if ((p < x-1) && (p >= dia2[pos-4]) && !is_free(*p)) return true;
     }

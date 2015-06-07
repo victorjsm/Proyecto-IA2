@@ -2,7 +2,7 @@
 #include <iostream>
 #include <limits>
 #include <ctime>
-#include <iostream>
+
 
 using namespace std;
 
@@ -33,7 +33,7 @@ int negamax(state_t state, int depth, int color){
 int negamaxAB(state_t state, int depth, int A, int B, int color){
     Nodos= Nodos+1;
     if (depth==0 || state.terminal() ){
-        cout << Hojas << "\n";
+   
         Hojas = Hojas+1;
         return color*state.value();//check for implementation in othelo_cut
     } 
@@ -59,19 +59,26 @@ int negamaxAB(state_t state, int depth, int A, int B, int color){
 bool TestMayor(state_t state, int depth, int value, int color){
     if (depth==0 || state.terminal() ){
         return (state.value()>value); 
-
     }
+
     bool player=color>0;
     std::vector<int> v= state.get_valid_moves(player);
-    for(std::vector<int>::iterator it = v.begin(); it != v.end(); ++it) {
-        if (player && TestMayor(state.move(player,*it),depth-1,value,-color)) {
-            return true;
-        }
-    }
     if (player) {
+        for(std::vector<int>::iterator it = v.begin(); it != v.end(); ++it) {
+            if (TestMayor(state.move(player, *it),depth-1,value,-color)) {
+                return true;
+            } 
+        }
         return false;
     }
-    return true;
+    else {
+        for(std::vector<int>::iterator it = v.begin(); it != v.end(); ++it) {
+            if (!TestMayor(state.move(player, *it),depth-1,value,-color)) {
+                return false;
+            } 
+        }
+        return true;
+    }
 }
 bool TestMinor(state_t state, int depth, int value, int color){
     if (depth==0 || state.terminal() ){
@@ -80,25 +87,28 @@ bool TestMinor(state_t state, int depth, int value, int color){
     }
     bool player=color>0;
     std::vector<int> v= state.get_valid_moves(player);
-    for(std::vector<int>::iterator it = v.begin(); it != v.end(); ++it) {
-        if (player && !TestMinor(state.move(player,*it),depth-1,value,-color)) {
-            return false;
-        }
-        if (!player && TestMinor(state.move(player,*it),depth-1,value,-color)) {
-            return true;
-        }
-    }
     if (player) {
+        for(std::vector<int>::iterator it = v.begin(); it != v.end(); ++it) {
+            if (!TestMinor(state.move(player, *it),depth-1,value,-color)) {
+                return false;
+            } 
+        }
         return true;
     }
-    return false;
+    else {
+        for(std::vector<int>::iterator it = v.begin(); it != v.end(); ++it) {
+            if (TestMinor(state.move(player, *it),depth-1,value,-color)) {
+                return true;
+            } 
+        }
+        return false;
+    }
 }
 
 int Scout(state_t state, int depth, int color){
     Nodos = Nodos+1;
     if (depth==0 || state.terminal() ){
         Hojas = Hojas+1;
-        cout << state << "\n";
         return state.value();//check for implementation in othelo_cut
     } 
     int score=0;
@@ -118,7 +128,7 @@ int Scout(state_t state, int depth, int color){
             if (player && TestMayor(state.move(player,*it),depth-1,score,-color)){
                 score = Scout(state.move(player,*it),depth-1,-color);
             }
-            if (!player && !TestMayor(state.move(player,*it),depth-1,score,-color)){
+            if (!player && TestMinor(state.move(player,*it),depth-1,score,-color)){
                 score = Scout(state.move(player,*it),depth-1,-color);
             }
         }

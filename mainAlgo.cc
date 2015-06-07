@@ -1,5 +1,6 @@
 #include "TodosAlgoritmos.cc"
 #include <ctime>
+
 using namespace std;
 
 
@@ -49,7 +50,9 @@ int main(int argc, const char **argv) {
     cout << "Hojas: "<< Hojas << "\n";
     Nodos=0;
     Hojas=0;
-/*
+    cout << "-------------------------------------------\n";
+    cout << "Score: " << score << "\n";
+*/    cout << "-------------------------------------------\n";
     cout << "----------------NEGASCOUT------------------\n"; 
     begin = clock();
     score = negaScout(state3,std::numeric_limits<int>::max(),-std::numeric_limits<int>::max(),std::numeric_limits<int>::max(),color);
@@ -63,7 +66,8 @@ int main(int argc, const char **argv) {
     Nodos=0;
     Hojas=0;
     cout << "-------------------------------------------\n";
-*/
+    cout << "Score: " << score << "\n";
+    cout << "-------------------------------------------\n";
     cout << "----------------NEGAMAXAB------------------\n"; 
     begin = clock();
     score = negamaxAB(state1,maxi,mini,maxi,color);
@@ -76,8 +80,11 @@ int main(int argc, const char **argv) {
     cout << "Hojas: "<< Hojas << "\n";
     Nodos=0;
     Hojas=0;
+    cout << "-------------------------------------------\n";
+    cout << "Score: " << score << "\n";
+    cout << "-------------------------------------------\n";
 
-/*
+
     cout << "----------------SCOUT------------------\n"; 
     begin = clock();
     score = Scout(state2,maxi,color);
@@ -90,8 +97,11 @@ int main(int argc, const char **argv) {
     cout << "Hojas: "<< Hojas << "\n";
     Nodos=0;
     Hojas=0;
-*/
+
+    cout << "-------------------------------------------\n";
     cout << "Score: " << score << "\n";
+    cout << "-------------------------------------------\n";
+    cout << "-------------------------------------------\n";
 
     return 0;
 }
