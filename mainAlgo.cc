@@ -11,7 +11,7 @@ int main(int argc, const char **argv) {
     clock_t begin,end;
     double elapsed_secs;
     int score;
-    int mini = std::numeric_limits<int>::min();
+    int mini = -std::numeric_limits<int>::max();
     int maxi = std::numeric_limits<int>::max();
     
     
@@ -68,6 +68,7 @@ int main(int argc, const char **argv) {
     cout << "-------------------------------------------\n";
     cout << "Score: " << score << "\n";
     cout << "-------------------------------------------\n";
+/*  
     cout << "----------------NEGAMAXAB------------------\n"; 
     begin = clock();
     score = negamaxAB(state1,maxi,mini,maxi,color);
@@ -102,6 +103,6 @@ int main(int argc, const char **argv) {
     cout << "Score: " << score << "\n";
     cout << "-------------------------------------------\n";
     cout << "-------------------------------------------\n";
-
+*/
     return 0;
 }
